@@ -1,3 +1,17 @@
+----------------------------------------------------------------------------------
+-- Company: Carnegie Mellon University, Pittsburgh PA 
+-- Engineer: Justin Wagner
+-- 
+-- Create Date:    7/Oct/2011
+-- Design Name: 
+-- Module Name:    tb_edge_detector - testbench 
+-- Project Name: 
+-- Target Devices:  n/a
+-- Tool versions: 
+--
+-- Dependencies: 
+--
+----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;

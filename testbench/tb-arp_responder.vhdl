@@ -1,3 +1,17 @@
+----------------------------------------------------------------------------------
+-- Company: Carnegie Mellon University, Pittsburgh PA 
+-- Engineer: Justin Wagner
+-- 
+-- Create Date:    7/Oct/2011
+-- Design Name: 
+-- Module Name:    tb_arp_package - testbench 
+-- Project Name: 
+-- Target Devices:  n/a
+-- Tool versions: 
+--
+-- Dependencies: arp_package.vhdl (Definitions of various constants)
+--
+----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;

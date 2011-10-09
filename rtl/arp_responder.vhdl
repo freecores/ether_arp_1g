@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Company: Eastern Washington University, Cheney, WA 
+-- Company: Carnegie Mellon University, Pittsburgh PA 
 -- Engineer: Justin Wagner
 -- 
 -- Create Date:    7/Oct/2011
@@ -8,7 +8,6 @@
 -- Project Name: 
 -- Target Devices:  n/a
 -- Tool versions: 
--- Description: Project for Job application to XR Trading
 --
 -- Dependencies: arp_package.vhdl (Definitions of various constants)
 --
