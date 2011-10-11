@@ -1,17 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: Carnegie Mellon University, Pittsburgh PA 
--- Engineer: Justin Wagner
--- 
--- Create Date:    7/Oct/2011
--- Design Name: 
--- Module Name:    tb_arp_package - testbench 
--- Project Name: 
--- Target Devices:  n/a
--- Tool versions: 
---
--- Dependencies: arp_package.vhdl (Definitions of various constants)
---
-----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
@@ -186,9 +172,9 @@ BEGIN
             wait_tb_clk;
         end loop;
 
-        -- Generate THA
+        -- Generate THA (Zero since we don't know it!)
         for i in 0 to 5 loop
-            DATA_RX       <= MY_MAC((47-i*8) downto (40-i*8));
+            DATA_RX       <= (others => '0');
             wait_tb_clk;
         end loop;
 

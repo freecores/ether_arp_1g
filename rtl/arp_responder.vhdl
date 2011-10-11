@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Company: Carnegie Mellon University, Pittsburgh PA 
+-- Company: Eastern Washington University, Cheney, WA 
 -- Engineer: Justin Wagner
 -- 
 -- Create Date:    7/Oct/2011
@@ -8,6 +8,7 @@
 -- Project Name: 
 -- Target Devices:  n/a
 -- Tool versions: 
+-- Description: Project for Job application to XR Trading
 --
 -- Dependencies: arp_package.vhdl (Definitions of various constants)
 --
@@ -47,7 +48,7 @@ architecture rtl of arp_responder is
     type state_type is (IDLE, 
                         CHECK_DA, CHECK_SA, CHECK_E_TYPE, CHECK_H_TYPE, CHECK_P_TYPE, 
                         CHECK_H_LEN, CHECK_P_LEN, CHECK_OPER, CHECK_SHA, CHECK_SPA, 
-                        CHECK_THA, CHECK_TPA,
+                        IGNORE_THA, CHECK_TPA,
                         GEN_DA, GEN_SA, GEN_E_TYPE, GEN_H_TYPE, GEN_P_TYPE, 
                         GEN_H_LEN, GEN_P_LEN, GEN_OPER, GEN_SHA, GEN_SPA, 
                         GEN_THA, GEN_TPA);
@@ -57,8 +58,8 @@ architecture rtl of arp_responder is
     signal next_state, state                        : state_type;    
     signal next_counter, counter                    : std_logic_vector(3 downto 0);
     signal posedge_DATA_VALID_RX                    : std_logic;
-    signal next_DATA_VALID_TX                       : std_logic;
-    signal next_DATA_TX                             : std_logic_vector(7 downto 0);
+    signal next_DATA_VALID_TX, next_2_DATA_VALID_TX : std_logic;
+    signal next_DATA_TX, next_2_DATA_TX             : std_logic_vector(7 downto 0);
 
 begin
 
@@ -216,21 +217,16 @@ begin
             next_state                          <= CHECK_SPA;
             next_SPA_mem(conv_integer(counter)) <= DATA_RX;
             if (counter >= 3) then
-                next_state                  <= CHECK_THA;
+                next_state                  <= IGNORE_THA;
                 next_counter                <= (others => '0');
             end if;
 
-        when CHECK_THA => 
-        -- Make sure we are the destination Hardware Address       
+        when IGNORE_THA => 
+        -- Ignore the destination Hardware Address (ARP requests can't fill this out by definition)
+            next_state                      <= IGNORE_THA;
             next_counter                    <= counter + 1;
-            if (DATA_RX = MY_MAC((47-(conv_integer(counter)*8)) downto (40-(conv_integer(counter)*8)))) then
-                next_state                  <= CHECK_THA;
-                if (counter >= 5) then
-                    next_state              <= CHECK_TPA;
-                    next_counter            <= (others => '0');
-                end if;
-            else
-                next_state                  <= IDLE;
+            if (counter >= 5) then
+                next_state                  <= CHECK_TPA;
                 next_counter                <= (others => '0');
             end if;
 
@@ -416,12 +412,16 @@ seq_TX:process(CLK_TX, ARESET)
 begin
 
     if (ARESET='1') then --resetting the board
-        DATA_VALID_TX       <= '0'; 
-        DATA_TX             <= (others => '0'); 
+        DATA_VALID_TX               <= '0'; 
+        DATA_TX                     <= (others => '0'); 
+        next_2_DATA_VALID_TX        <= '0';
+        next_2_DATA_TX              <= (others => '0'); 
     -- move next state values into registers on clock edge
     elsif (CLK_TX'event and CLK_TX ='1') then 
-        DATA_VALID_TX       <= next_DATA_VALID_TX;
-        DATA_TX             <= next_DATA_TX;
+        next_2_DATA_VALID_TX        <= next_DATA_VALID_TX;
+        next_2_DATA_TX              <= next_DATA_TX;
+        DATA_VALID_TX               <= next_2_DATA_VALID_TX;
+        DATA_TX                     <= next_2_DATA_TX;
     else
         NULL;
     end if;
